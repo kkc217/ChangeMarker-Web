@@ -27,15 +27,18 @@ router.use('/public', express.static(path.join(__dirname, '../public')));
 router.use('/views', express.static(path.join(__dirname, '../views')));
 
 router.get('/', tutorial);
+router.get('/v2', tutorial);
 router.post('/', main);
 
 const submit = require('./submitRoute');
 const deleteRoute = require('./deleteRoute');
 const check = require('./checkRoute');
+const tutorialCheck = require('./tutorialCheckRoute');
 
 router.use('/submit', submit);
 router.delete('/delete', deleteRoute);
 router.use('/check', check);
+router.use('/tutorialCheck', tutorialCheck);
 
 router.use('/finish', function(req, res, next) {
     res.render('../views/finish.ejs', {
