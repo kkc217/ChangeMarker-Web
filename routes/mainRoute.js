@@ -177,62 +177,72 @@ router.use('/', function(req, res, next) {
 
     var code = req.session.code;
     
-    var mysql_odbc = require('../db/db_conn')();
-    var conn = mysql_odbc.init();
+    var mysql = require('mysql');
+    var config = require('../db/db_info');
+    var pool = mysql.createPool(config);
 
     var query = "select `type`,`old_code`,`line_number_old`,`length_old`,`new_code`,`line_number_new`,`length_new` from scripts_web where `user_code`='";
     query += code;
     query += "' and `change_id`='";
     query += fileNum;
     query += "';";
-    // console.log(query);
-    
-    conn.query(query, function(err, results, field) {
-        var storedScripts = ``;
-        for (var idx in results) {
-            var trId = "";
-            trId += (results[idx].length_old == null ? "" : results[idx].length_old);
-            trId += "/";
-            trId += (results[idx].length_new == null ? "" : results[idx].length_new);
-            storedScripts += `<tr id="`;
-            storedScripts += trId;
-            storedScripts += `">`;
 
-            storedScripts += `<td>`;
-            storedScripts += results[idx].type;
-            storedScripts += `</td>`;
-            storedScripts += `<td>`;
-            storedScripts += (results[idx].old_code == null ? "" : results[idx].old_code);
-            storedScripts += `</td>`;
-            storedScripts += `<td>`;
-            storedScripts += (results[idx].line_number_old == null ? "" : results[idx].line_number_old);
-            storedScripts += `</td>`;
-            storedScripts += `<td>`;
-            storedScripts += (results[idx].new_code == null ? "" : results[idx].new_code);
-            storedScripts += `</td>`;
-            storedScripts += `<td>`;
-            storedScripts += (results[idx].line_number_new == null ? "" : results[idx].line_number_new);
-            storedScripts += `</td>`;
-            storedScripts += `<td>`;
-            storedScripts += `<a href="javascript:void(0)" class="del_btn" onclick="deleteRow(this, 0);">Delete</a>`;
-            storedScripts += `</td>`;
-
-            storedScripts += `</tr>`;
+    pool.getConnection(function(err, conn) {
+        if (!err) {
+            conn.query(query, function(err, results, field) {
+                var storedScripts = ``;
+                for (var idx in results) {
+                    var trId = "";
+                    trId += (results[idx].length_old == null ? "" : results[idx].length_old);
+                    trId += "/";
+                    trId += (results[idx].length_new == null ? "" : results[idx].length_new);
+                    storedScripts += `<tr id="`;
+                    storedScripts += trId;
+                    storedScripts += `">`;
+        
+                    storedScripts += `<td>`;
+                    storedScripts += results[idx].type;
+                    storedScripts += `</td>`;
+                    storedScripts += `<td>`;
+                    storedScripts += (results[idx].old_code == null ? "" : results[idx].old_code);
+                    storedScripts += `</td>`;
+                    storedScripts += `<td>`;
+                    storedScripts += (results[idx].line_number_old == null ? "" : results[idx].line_number_old);
+                    storedScripts += `</td>`;
+                    storedScripts += `<td>`;
+                    storedScripts += (results[idx].new_code == null ? "" : results[idx].new_code);
+                    storedScripts += `</td>`;
+                    storedScripts += `<td>`;
+                    storedScripts += (results[idx].line_number_new == null ? "" : results[idx].line_number_new);
+                    storedScripts += `</td>`;
+                    storedScripts += `<td>`;
+                    storedScripts += `<a href="javascript:void(0)" class="del_btn" onclick="deleteRow(this, 0);">Delete</a>`;
+                    storedScripts += `</td>`;
+        
+                    storedScripts += `</tr>`;
+                }
+            
+                res.render('../views/marker.ejs', {
+                    currentFileName : fileNum,
+                    mkFileName : mkFileName,
+                    lhsTemplate : lhsTemplate,
+                    rhsTemplate : rhsTemplate,
+                    editScripts : editScripts,
+                    diffNum : diffNum,
+                    code : code,
+                    fileCnt : fileCnt,
+                    storedScripts : storedScripts,
+                    completed : req.session.completed
+                });
+            });
         }
-    
-        res.render('../views/marker.ejs', {
-            currentFileName : fileNum,
-            mkFileName : mkFileName,
-            lhsTemplate : lhsTemplate,
-            rhsTemplate : rhsTemplate,
-            editScripts : editScripts,
-            diffNum : diffNum,
-            code : code,
-            fileCnt : fileCnt,
-            storedScripts : storedScripts,
-            completed : req.session.completed
-        });
+        conn.release();
     });
+
+
+    
+    
+    
     
 });
 
