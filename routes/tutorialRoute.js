@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const uuid = require('uuid');
-const fileSelect = require('../public/js/fileSelect');
 
 router.use('/', function(req, res, next) {
     var hashCode = uuid.v4();
@@ -15,18 +14,79 @@ router.use('/', function(req, res, next) {
         if (!err) {
             conn.query(sql, function(error, results, fields) {
                 if (error) throw error;
-        
-                req.session.codeFiles = fileSelect.getFiles(results);
+
+                var sql = "select distinct `change_id` from script_polish;";
+
+                var mysql = require('mysql');
+                var config = require('../db/db_info');
+                var pool = mysql.createPool(config);
+                var result = new Array();
+            
+                pool.getConnection(function(err, conn) {
+                    if (!err) {
+                        conn.query(sql, function(error, results2, fields) {
+                            if (error) throw error;
+                            
+                            var diffNum = results2.length - results.length;
+                            if (diffNum > 0) {
+                                var filesObjArray = new Array();
+                                for (var i = 0; i < results.length; i++) {
+                                    filesObjArray.push(results[i].change_Id);
+                                }
+                                for (var i = 0; i < results2.length; i++){
+                                    if (!(filesObjArray.includes(results2[i].change_id))) {
+                                        result.push(results2[i].change_id);
+                                    }
+                                    if (result.length == 5)
+                                        break;
+                                }
+                                var cnt = 0;
+                                while (result.length < 5) {
+                                    result.push(results[cnt].change_Id);
+                                    cnt++;
+                                }
+                            } else {
+                                for (var i = 0; i < 5; i++) {
+                                    result.push(results[i].change_Id);
+                                }
+                            }
+                            req.session.codeFiles = result;
+                        })
+                    }
+                    conn.release();
+                });
+
+                var sql2 = "select `file_name` from change_file_name order by `change_id`;";
+
+                pool.getConnection(function(err, conn) {
+                    if (!err) {
+                        conn.query(sql2, function(error, results3, fields) {
+                            if (error) throw error;
+
+                            var fileNames = new Array();
+                            fileNames.push("");
+                            for (var i = 0; i < results3.length; i++) {
+                                fileNames.push(results3[i].file_name);
+                            }
+                            
+                            req.session.fileNames = fileNames;
+                        })
+                    }
+                    conn.release();
+                });
+
                 req.session.code = hashCode;
                 req.session.fileCnt = 0;
-                req.session.save(err => {
-                    if (err) {
-                        console.log(err);
-                        return res.status(500).send("<h1>500 error</h1>");
-                    }
-                    res.render('../views/tutorial.ejs', {
-                    });
-                })
+                setTimeout(() => {
+                    req.session.save(err => {
+                        if (err) {
+                            console.log(err);
+                            return res.status(500).send("<h1>500 error</h1>");
+                        }
+                        res.render('../views/tutorial.ejs', {
+                        });
+                    })
+                }, 2000);
             })
         }
         conn.release();
