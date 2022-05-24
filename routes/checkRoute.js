@@ -58,8 +58,7 @@ router.use('/', function(req, res, next) {
                     });
 
                     const baseDir = __dirname.slice(0, -7);
-                    let fileList = fs.readFileSync(baseDir + '/change_files.txt', 'utf-8');
-                    fileList = fileList.split('/');
+                    let fileList = req.session.fileNames;
                 
                     var fileNum = Number(currentFile.slice(6));
                     var lhs = fs.readFileSync(baseDir + '/changes/' + currentFile + '/old/' + fileList[fileNum],'utf-8');

@@ -22,10 +22,9 @@ const Connection = require('mysql/lib/Connection');
 
 var baseDir = __dirname.slice(0, -7);
 
-let fileList = fs.readFileSync(baseDir + '/change_files.txt', 'utf-8');
-fileList = fileList.split('/');
-
 router.use('/', function(req, res, next) {
+    let fileList = req.session.fileNames;
+
     if (req.body.fileCnt != undefined) {
         var fileCnt = Number(req.body.fileCnt);
         req.session.fileCnt = fileCnt;
