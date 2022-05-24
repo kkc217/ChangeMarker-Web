@@ -10,9 +10,10 @@ function prevExplain() {
         nextButton.disabled = false;
     }
 
-    if (currentPage == 1) {
-        alert("This is the first page.");
-        return;
+    if (currentPage == 2) {
+        var prevButton = document.getElementById('prev_button');
+        prevButton.style.color = "#d7d7d8";
+        prevButton.disabled = true;
     }
     explainWindow.src = "/views/explain" + (currentPage - 1) + ".html";
     if ((currentPage - 1) >= 3 && (currentPage - 1) <= 6) {
@@ -32,6 +33,10 @@ function nextExplain() {
     var checkExercise = Number(document.getElementById('checkExercise').value);
     var currentPage = Number(document.getElementById('current_page').innerHTML);
 
+    var prevButton = document.getElementById('prev_button');
+    prevButton.style.color = "#393E46";
+    prevButton.disabled = false;
+    
     if (checkExercise <= currentPage) {
         var nextButton = document.getElementById('next_button');
         nextButton.style.color = "#d7d7d8";
