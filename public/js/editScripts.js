@@ -1,13 +1,13 @@
-var storedSelectionLeft = new Object();
+let storedSelectionLeft = new Object();
 storedSelectionLeft.len = 0;
 
 function storeSelectionLeft() {
-  var result = new Object();
-  var selectionText = "";
-  var startNum = "";
-  var endNum = "";
-  var selectionNumber = "";
-  var startPos = 0;
+  let result = new Object();
+  let selectionText = "";
+  let startNum = "";
+  let endNum = "";
+  let selectionNumber = "";
+  let startPos = 0;
 
   if (document.getSelection) {
     selectionText = document.getSelection();
@@ -47,16 +47,16 @@ function storeSelectionLeft() {
   storedSelectionLeft = result;
 }
 
-var storedSelectionRight = new Object();
+let storedSelectionRight = new Object();
 storedSelectionRight.len = 0;
 
 function storeSelectionRight() {
-  var result = new Object();
-  var selectionText = "";
-  var startNum = "";
-  var endNum = "";
-  var selectionNumber = "";
-  var startPos = 0;
+  let result = new Object();
+  let selectionText = "";
+  let startNum = "";
+  let endNum = "";
+  let selectionNumber = "";
+  let startPos = 0;
 
   if (document.getSelection) {
     selectionText = document.getSelection();
@@ -101,9 +101,9 @@ function storeSelectionRight() {
 
 
 
-var check = 0;
-var tmpStartPos = 0;
-var tmpLen = 0;
+let check = 0;
+let tmpStartPos = 0;
+let tmpLen = 0;
 function GenController(e) {
     if (e == 1 && check == 0) {
         GenDelete();
@@ -133,23 +133,23 @@ function GenDelete() {
         alert("Please select texts.");
         return;
     }
-    var table = document.getElementById("edit_scripts");
-    var newRow = table.insertRow();
-    var selectResult = getSelectResult();
+    let table = document.getElementById("edit_scripts");
+    let newRow = table.insertRow();
+    let selectResult = getSelectResult();
     newRow.id = selectResult.len + "/";
-    var newATag = document.createElement('a');
+    let newATag = document.createElement('a');
     newATag.href = "javascript:void(0)";
     newATag.text = "Delete";
     newATag.className = "del_btn";
     newATag.onclick = function() {deleteRow(this, 0);};
 
 
-    var newCell1 = newRow.insertCell(0);
-    var newCell2 = newRow.insertCell(1);
-    var newCell3 = newRow.insertCell(2);
-    var newCell4 = newRow.insertCell(3);
-    var newCell5 = newRow.insertCell(4);
-    var newCell6 = newRow.insertCell(5);
+    let newCell1 = newRow.insertCell(0);
+    let newCell2 = newRow.insertCell(1);
+    let newCell3 = newRow.insertCell(2);
+    let newCell4 = newRow.insertCell(3);
+    let newCell5 = newRow.insertCell(4);
+    let newCell6 = newRow.insertCell(5);
 
     newCell1.innerText = 'Delete';
     newCell2.innerText = selectResult.text;
@@ -157,7 +157,7 @@ function GenDelete() {
     newCell6.appendChild(newATag);
 
 
-    var scriptJSON = new Object();
+    let scriptJSON = new Object();
     scriptJSON.user_code = document.getElementById("userCode").value;
     scriptJSON.type = "Delete";
     scriptJSON.old_code = selectResult.text;
@@ -176,24 +176,24 @@ function GenInsert() {
         alert("Please select texts.");
         return;
     }
-    var table = document.getElementById("edit_scripts");
-    var newRow = table.insertRow();
-    var selectResult = getSelectResult();
+    let table = document.getElementById("edit_scripts");
+    let newRow = table.insertRow();
+    let selectResult = getSelectResult();
     newRow.id = "/" + selectResult.len;
 
-    var newATag = document.createElement('a');
+    let newATag = document.createElement('a');
     newATag.href = "javascript:void(0)";
     newATag.text = "Delete";
     newATag.className = "del_btn";
     newATag.onclick = function() {deleteRow(this, 0);};
 
 
-    var newCell1 = newRow.insertCell(0);
-    var newCell2 = newRow.insertCell(1);
-    var newCell3 = newRow.insertCell(2);
-    var newCell4 = newRow.insertCell(3);
-    var newCell5 = newRow.insertCell(4);
-    var newCell6 = newRow.insertCell(5);
+    let newCell1 = newRow.insertCell(0);
+    let newCell2 = newRow.insertCell(1);
+    let newCell3 = newRow.insertCell(2);
+    let newCell4 = newRow.insertCell(3);
+    let newCell5 = newRow.insertCell(4);
+    let newCell6 = newRow.insertCell(5);
 
     newCell1.innerText = 'Insert';
     newCell4.innerText = selectResult.text;
@@ -201,7 +201,7 @@ function GenInsert() {
     newCell6.appendChild(newATag);
 
 
-    var scriptJSON = new Object();
+    let scriptJSON = new Object();
     scriptJSON.user_code = document.getElementById("userCode").value;
     scriptJSON.type = "Insert";
     scriptJSON.new_code = selectResult.text;
@@ -224,24 +224,24 @@ function GenMoveLeft() {
         return;
     }
 
-    var table = document.getElementById("edit_scripts");
-    var newRow = table.insertRow();
-    var selectResult = getSelectResult();
+    let table = document.getElementById("edit_scripts");
+    let newRow = table.insertRow();
+    let selectResult = getSelectResult();
     newRow.id = selectResult.len + "/" + storedSelectionRight.len;
 
-    var newATag = document.createElement('a');
+    let newATag = document.createElement('a');
     newATag.href = "javascript:void(0)";
     newATag.text = "Delete";
     newATag.className = "del_btn";
     newATag.onclick = function() {deleteRow(this, 1);};
 
 
-    var newCell1 = newRow.insertCell(0);
-    var newCell2 = newRow.insertCell(1);
-    var newCell3 = newRow.insertCell(2);
-    var newCell4 = newRow.insertCell(3);
-    var newCell5 = newRow.insertCell(4);
-    var newCell6 = newRow.insertCell(5);
+    let newCell1 = newRow.insertCell(0);
+    let newCell2 = newRow.insertCell(1);
+    let newCell3 = newRow.insertCell(2);
+    let newCell4 = newRow.insertCell(3);
+    let newCell5 = newRow.insertCell(4);
+    let newCell6 = newRow.insertCell(5);
 
     newCell1.innerText = 'Move';
     newCell2.innerText = selectResult.text;
@@ -252,7 +252,7 @@ function GenMoveLeft() {
 
     check = 0;
 
-    var scriptJSON = new Object();
+    let scriptJSON = new Object();
     scriptJSON.user_code = document.getElementById("userCode").value;
     scriptJSON.type = "Move";
     scriptJSON.old_code = selectResult.text;
@@ -280,24 +280,24 @@ function GenMoveRight() {
         return;
     }
 
-    var table = document.getElementById("edit_scripts");
-    var newRow = table.insertRow();
-    var selectResult = getSelectResult();
+    let table = document.getElementById("edit_scripts");
+    let newRow = table.insertRow();
+    let selectResult = getSelectResult();
     newRow.id = storedSelectionLeft.len + "/" + selectResult.len;
 
-    var newATag = document.createElement('a');
+    let newATag = document.createElement('a');
     newATag.href = "javascript:void(0)";
     newATag.text = "Delete";
     newATag.className = "del_btn";
     newATag.onclick = function() {deleteRow(this, 1);};
 
 
-    var newCell1 = newRow.insertCell(0);
-    var newCell2 = newRow.insertCell(1);
-    var newCell3 = newRow.insertCell(2);
-    var newCell4 = newRow.insertCell(3);
-    var newCell5 = newRow.insertCell(4);
-    var newCell6 = newRow.insertCell(5);
+    let newCell1 = newRow.insertCell(0);
+    let newCell2 = newRow.insertCell(1);
+    let newCell3 = newRow.insertCell(2);
+    let newCell4 = newRow.insertCell(3);
+    let newCell5 = newRow.insertCell(4);
+    let newCell6 = newRow.insertCell(5);
 
     newCell1.innerText = 'Move';
     newCell2.innerText = storedSelectionLeft.text;
@@ -308,7 +308,7 @@ function GenMoveRight() {
 
     check = 0;
 
-    var scriptJSON = new Object();
+    let scriptJSON = new Object();
     scriptJSON.user_code = document.getElementById("userCode").value;
     scriptJSON.type = "Move";
     scriptJSON.old_code = storedSelectionLeft.text;
@@ -336,24 +336,24 @@ function GenUpdateLeft() {
         return;
     }
     
-    var table = document.getElementById("edit_scripts");
-    var newRow = table.insertRow();
-    var selectResult = getSelectResult();
+    let table = document.getElementById("edit_scripts");
+    let newRow = table.insertRow();
+    let selectResult = getSelectResult();
     newRow.id = selectResult.len +  "/" + storedSelectionRight.len;
 
-    var newATag = document.createElement('a');
+    let newATag = document.createElement('a');
     newATag.href = "javascript:void(0)";
     newATag.text = "Delete";
     newATag.className = "del_btn";
     newATag.onclick = function() {deleteRow(this, 1);};
 
 
-    var newCell1 = newRow.insertCell(0);
-    var newCell2 = newRow.insertCell(1);
-    var newCell3 = newRow.insertCell(2);
-    var newCell4 = newRow.insertCell(3);
-    var newCell5 = newRow.insertCell(4);
-    var newCell6 = newRow.insertCell(5);
+    let newCell1 = newRow.insertCell(0);
+    let newCell2 = newRow.insertCell(1);
+    let newCell3 = newRow.insertCell(2);
+    let newCell4 = newRow.insertCell(3);
+    let newCell5 = newRow.insertCell(4);
+    let newCell6 = newRow.insertCell(5);
 
     newCell1.innerText = 'Update';
     newCell2.innerText = selectResult.text;
@@ -364,7 +364,7 @@ function GenUpdateLeft() {
 
     check = 0;
 
-    var scriptJSON = new Object();
+    let scriptJSON = new Object();
     scriptJSON.user_code = document.getElementById("userCode").value;
     scriptJSON.type = "Update";
     scriptJSON.old_code = selectResult.text;
@@ -392,24 +392,24 @@ function GenUpdateRight() {
         return;
     }
 
-    var table = document.getElementById("edit_scripts");
-    var newRow = table.insertRow();
-    var selectResult = getSelectResult();
+    let table = document.getElementById("edit_scripts");
+    let newRow = table.insertRow();
+    let selectResult = getSelectResult();
     newRow.id =  storedSelectionLeft.len + "/" + selectResult.len;
 
-    var newATag = document.createElement('a');
+    let newATag = document.createElement('a');
     newATag.href = "javascript:void(0)";
     newATag.text = "Delete";
     newATag.className = "del_btn";
     newATag.onclick = function() {deleteRow(this, 1);};
 
 
-    var newCell1 = newRow.insertCell(0);
-    var newCell2 = newRow.insertCell(1);
-    var newCell3 = newRow.insertCell(2);
-    var newCell4 = newRow.insertCell(3);
-    var newCell5 = newRow.insertCell(4);
-    var newCell6 = newRow.insertCell(5);
+    let newCell1 = newRow.insertCell(0);
+    let newCell2 = newRow.insertCell(1);
+    let newCell3 = newRow.insertCell(2);
+    let newCell4 = newRow.insertCell(3);
+    let newCell5 = newRow.insertCell(4);
+    let newCell6 = newRow.insertCell(5);
 
     newCell1.innerText = 'Update';
     newCell2.innerText = storedSelectionLeft.text;
@@ -420,7 +420,7 @@ function GenUpdateRight() {
 
     check = 0;
 
-    var scriptJSON = new Object();
+    let scriptJSON = new Object();
     scriptJSON.user_code = document.getElementById("userCode").value;
     scriptJSON.type = "Update";
     scriptJSON.old_code = storedSelectionLeft.text;
@@ -440,17 +440,17 @@ function GenUpdateRight() {
 }
 
 async function deleteRow(element, e) {
-    var table = document.getElementById("edit_scripts");
-    var trs = table.children[0].children;
-    var lastRow = trs[trs.length - 1];
-    var target = element.parentNode.parentNode;
-    var rowNum = target.rowIndex;
+    let table = document.getElementById("edit_scripts");
+    let trs = table.children[0].children;
+    let lastRow = trs[trs.length - 1];
+    let target = element.parentNode.parentNode;
+    let rowNum = target.rowIndex;
 
-    var tds = trs[rowNum].children;
+    let tds = trs[rowNum].children;
 
-    var lens = target.id.split('/');
+    let lens = target.id.split('/');
 
-    var scriptJSON = new Object();
+    let scriptJSON = new Object();
     scriptJSON.user_code = document.getElementById("userCode").value;
     scriptJSON.type = tds[0].innerText;
     scriptJSON.length_old = Number(lens[0]);

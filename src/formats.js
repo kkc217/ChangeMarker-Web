@@ -44,9 +44,9 @@ function GnuNormalFormat(change) {
 	return nf.join('\n');
 }
 
-var formats = {
+let formats = {
 	GnuNormalFormat: function (changes) {
-		var i, out = [];
+		let i, out = [];
 		for (i = 0; i < changes.length; ++i) {
 			out.push(GnuNormalFormat(changes[i]));
 		}

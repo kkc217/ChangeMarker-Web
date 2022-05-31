@@ -1,4 +1,4 @@
-var selectResult = new Object();
+let selectResult = new Object();
 
 // Context Menu List 렌더링
 function renderContextMenuList( list ){
@@ -141,12 +141,12 @@ function getSelectResult() {
 
 
 function dragSelect() {
-  var result = new Object();
-  var selectionText = "";
-  var startNum = "";
-  var endNum = "";
-  var selectionNumber = "";
-  var startPos = 0;
+  let result = new Object();
+  let selectionText = "";
+  let startNum = "";
+  let endNum = "";
+  let selectionNumber = "";
+  let startPos = 0;
 
   if (document.getSelection) {
     selectionText = document.getSelection();

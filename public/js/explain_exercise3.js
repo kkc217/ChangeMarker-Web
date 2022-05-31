@@ -1,82 +1,16 @@
-async function tutorialCheckAjax(lhs, rhs) {
-  $.ajax({
-      type: 'post',
-      url: '/tutorialCheck',
-      data: {lhs : lhs, rhs : rhs},
-      dataType: 'json',
-      success: function(res) {
-        var checkButton = document.getElementById('checkButton');
+let tmpStartPos = 0;
+let tmpLen = 0;
 
-        if (res.diffCnt == 0) {
-          checkButton.value = "Go Next!";
-          checkButton.style.backgroundColor = "#0dff47";
-          checkButton.onclick = "";
-          checkButton.type = "submit";
-
-          var parentWindow = window.parent.document;
-          var checkExercise = parentWindow.getElementById('checkExercise');
-          var currentPageNum = Number(parentWindow.getElementById('current_page').innerText);
-          checkExercise.value = String(currentPageNum);
-        }
-        else {
-          checkButton.style.backgroundColor = "#fd6a78";
-          popup = window.open("tutorialPopup.html", "childForm", "width=800, height=300");
-          setTimeout(() => {
-            var lhsCodeTag = document.createElement('code');
-            lhsCodeTag.innerHTML = res.lhsTemplate;
-            lhsCodeTag.className = "java";
-            var rhsCodeTag = document.createElement('code');
-            rhsCodeTag.innerHTML = res.rhsTemplate;
-            rhsCodeTag.className = "java";
-  
-            var lhsPreTag = popup.document.getElementById('inner_left');
-            lhsPreTag.appendChild(lhsCodeTag);
-            var rhsPreTag = popup.document.getElementById('inner_right');
-            rhsPreTag.appendChild(rhsCodeTag);
-          },500);
-
-        }
-      }
-  });
-}
-
-var check = 0;
-var tmpStartPos = 0;
-var tmpLen = 0;
-async function GenController(e) {
-    if (e == 1 && check == 0) {
-        GenDelete();
-    } else if (e == 2 && check == 0) {
-        alert('This example has a only "Delete" script!');
-    } else if (e == 3 && (check == 0 || check == 1)) {
-        alert('This example has a only "Delete" script!');
-    } else if (e == 4 && (check == 0 || check == 2)) {
-      alert('This example has a only "Delete" script!');
-    } else if (e == 5 && (check == 0 || check == 3)) {
-      alert('This example has a only "Delete" script!');
-    } else if (e == 6 && (check == 0 || check == 4)) {
-      alert('This example has a only "Delete" script!');
-    } else if (check == 1) {
-      alert('This example has a only "Delete" script!');
-    } else if (check == 2) {
-      alert('This example has a only "Delete" script!');
-    } else if (check == 3) {
-      alert('This example has a only "Delete" script!');
-    } else if (check == 4) {
-      alert('This example has a only "Delete" script!');
-    }
-}
-
-var hintCnt = 0;
+let hintCnt = 0;
 
 function GenDelete() {
-  var selectResult = getSelectResult();
+  let selectResult = getSelectResult();
     if (selectResult.len == 0) {
         alert("Please select texts.");
         return;
     }
 
-    var checkExercise = window.parent.document.getElementById('checkExercise');
+    let checkExercise = window.parent.document.getElementById('checkExercise');
     if (selectResult.text.indexOf('super(settings);', 0) < 0) {
       hintCnt += 1;
       if (hintCnt == 1) {
@@ -104,87 +38,42 @@ function GenDelete() {
       alert("Correct!! The next button is activated.");
     }
 
-    var table = document.getElementById("edit_scripts");
-    var newRow = table.insertRow();
+    let table = document.getElementById("edit_scripts");
+    let newRow = table.insertRow();
     newRow.id = selectResult.len + "/:" + selectResult.startPos + "/";
 
-    var newATag = document.createElement('a');
+    let newATag = document.createElement('a');
     newATag.href = "javascript:void(0)";
     newATag.text = "Delete";
     newATag.className = "del_btn";
     newATag.onclick = function() {deleteRow(this, 0);};
 
 
-    var newCell1 = newRow.insertCell(0);
-    var newCell2 = newRow.insertCell(1);
-    var newCell3 = newRow.insertCell(2);
-    var newCell4 = newRow.insertCell(3);
-    var newCell5 = newRow.insertCell(4);
-    var newCell6 = newRow.insertCell(5);
+    let newCell1 = newRow.insertCell(0);
+    let newCell2 = newRow.insertCell(1);
+    let newCell3 = newRow.insertCell(2);
+    let newCell4 = newRow.insertCell(3);
+    let newCell5 = newRow.insertCell(4);
+    let newCell6 = newRow.insertCell(5);
 
     newCell1.innerText = 'Delete';
-    var preTag = document.createElement('pre');
+    let preTag = document.createElement('pre');
     preTag.innerHTML = selectResult.text;
     newCell2.appendChild(preTag);
     newCell3.innerText = selectResult.lineNum;
     newCell6.appendChild(newATag);
 
-    var currentPageNum = Number(window.parent.document.getElementById('current_page').innerText);
+    let currentPageNum = Number(window.parent.document.getElementById('current_page').innerText);
     checkExercise.value = currentPageNum;
-    var nextButton = window.parent.document.getElementById('next_button');
+    let nextButton = window.parent.document.getElementById('next_button');
     nextButton.style.color = "#393E46";
     nextButton.disabled = false;
 }
 
-async function deleteRow(element, e) {
-    var table = document.getElementById("edit_scripts");
-    var trs = table.children[0].children;
-    var lastRow = trs[trs.length - 1];
-    var target = element.parentNode.parentNode;
-    var rowNum = target.rowIndex;
-
-    if (e == 1 && lastRow == target) {
-        check = 0;
-    }
-    table.deleteRow(rowNum);
-}
 
 
 
-
-
-
-
-
-
-var selectResult = new Object();
-
-// Context Menu List 렌더링
-function renderContextMenuList( list ){
-  // List Element 생성
-  const ctxMenuList = document.createElement('ul');
-  
-  // List Item 생성
-  list.forEach(function( item ){
-    // Item Element 생성
-    const ctxMenuItem = document.createElement('li');
-    const ctxMenuItem_a = document.createElement('a');
-    const ctxMenuItem_a_text = document.createTextNode(item.label);
-    
-    // 클릭 이벤트 설정
-    if( item.onClick ){
-      ctxMenuItem.addEventListener( 'click', item.onClick, false );
-    }
-
-    // Item 추가
-    ctxMenuItem_a.appendChild( ctxMenuItem_a_text );
-    ctxMenuItem.appendChild( ctxMenuItem_a );
-    ctxMenuList.appendChild( ctxMenuItem );
-  });
-  
-  // List Element 반환
-  return ctxMenuList;
-}
+let selectResult = new Object();
 
 // Context Menu 생성
 function handleCreateContextMenu_left(event){
@@ -210,19 +99,19 @@ function handleCreateContextMenu_left(event){
     {
       label: "Generate Delete",
       onClick: function(){
-        GenController(1);
+        GenController(0, 0);
       }
     },
     {
       label: "Generate Move",
       onClick: function(event){
-        GenController(3);
+        GenController(0, 2);
       }
     },
     {
       label: "Generate Update",
       onClick: function(event){
-        GenController(5);
+        GenController(0, 3);
       }
     }
   ]));
@@ -259,19 +148,19 @@ function handleCreateContextMenu_right(event){
       {
       label: "Generate Insert",
         onClick: function(event){
-          GenController(2);
+          GenController(0, 1);
         }
       },
       {
       label: "Generate Move",
         onClick: function(event){
-          GenController(4);
+          GenController(0, 2);
         }
       },
       {
       label: "Generate Update",
         onClick: function(event){
-          GenController(6);
+          GenController(0, 3);
         }
       }
   ]));
@@ -286,26 +175,18 @@ function handleCreateContextMenu_right(event){
   document.body.appendChild( ctxMenu );
 }
 
-// Context Menu 제거
-function handleClearContextMenu(event){
-  const ctxMenu = document.getElementById('dochi_context_menu');
-  if( ctxMenu ){
-    ctxMenu.remove();
-  }
-}
-
 function getSelectResult() {
   return selectResult;
 }
 
 
 function dragSelect() {
-  var result = new Object();
-  var selectionText = "";
-  var startNum = "";
-  var endNum = "";
-  var selectionNumber = "";
-  var startPos = 0;
+  let result = new Object();
+  let selectionText = "";
+  let startNum = "";
+  let endNum = "";
+  let selectionNumber = "";
+  let startPos = 0;
 
   if (document.getSelection) {
     selectionText = document.getSelection();
@@ -355,14 +236,12 @@ function dragSelect() {
 
 
 function move_inner() {
-  var left = document.getElementById("left");
-  var right = document.getElementById("right")
+  let left = document.getElementById("left");
+  let right = document.getElementById("right")
 
   left.scrollTo(0, 130);
   right.scrollTo(0, 130);
 }
-
-
 
 function init() {
     document.getElementById('left').addEventListener('contextmenu', handleCreateContextMenu_left, false);

@@ -1,17 +1,17 @@
 function prevExplain() {
-    var currentPage = Number(document.getElementById('current_page').innerHTML);
-    var explainWindow = document.getElementById('explain_window');
-    var exerciseWindow = document.getElementById('exercise_window');
-    var checkExercise = Number(document.getElementById('checkExercise').value);
+    let currentPage = Number(document.getElementById('current_page').innerHTML);
+    let explainWindow = document.getElementById('explain_window');
+    let exerciseWindow = document.getElementById('exercise_window');
+    let checkExercise = Number(document.getElementById('checkExercise').value);
     
     if (checkExercise + 1 >= currentPage) {
-        var nextButton = document.getElementById('next_button');
+        let nextButton = document.getElementById('next_button');
         nextButton.style.color = "#393E46";
         nextButton.disabled = false;
     }
 
     if (currentPage == 2) {
-        var prevButton = document.getElementById('prev_button');
+        let prevButton = document.getElementById('prev_button');
         prevButton.style.color = "#d7d7d8";
         prevButton.disabled = true;
     }
@@ -30,23 +30,23 @@ function prevExplain() {
 }
 
 function nextExplain() {
-    var checkExercise = Number(document.getElementById('checkExercise').value);
-    var currentPage = Number(document.getElementById('current_page').innerHTML);
+    let checkExercise = Number(document.getElementById('checkExercise').value);
+    let currentPage = Number(document.getElementById('current_page').innerHTML);
 
-    var prevButton = document.getElementById('prev_button');
+    let prevButton = document.getElementById('prev_button');
     prevButton.style.color = "#393E46";
     prevButton.disabled = false;
     
     if (checkExercise <= currentPage) {
-        var nextButton = document.getElementById('next_button');
+        let nextButton = document.getElementById('next_button');
         nextButton.style.color = "#d7d7d8";
         nextButton.disabled = true;
     }
 
-    var totalPage = Number(document.getElementById('total_page').innerHTML);
-    var explainWindow = document.getElementById('explain_window');
-    var exerciseWindow = document.getElementById('exercise_window');
-    var newPageNum = currentPage + 1;
+    let totalPage = Number(document.getElementById('total_page').innerHTML);
+    let explainWindow = document.getElementById('explain_window');
+    let exerciseWindow = document.getElementById('exercise_window');
+    let newPageNum = currentPage + 1;
 
     if (currentPage == totalPage) {
         alert("This is the last page.");
@@ -60,9 +60,9 @@ function nextExplain() {
         exerciseWindow.src = "/views/explain_exercise" + newPageNum + ".html";
     }
     else {
-        var totalPage = Number(document.getElementById('total_page').innerHTML);
+        let totalPage = Number(document.getElementById('total_page').innerHTML);
         if (newPageNum == totalPage) {
-            var startButton = document.getElementById('start_button');
+            let startButton = document.getElementById('start_button');
             startButton.style.color = "#000";
             startButton.disabled = false;
         }

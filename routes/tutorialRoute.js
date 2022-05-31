@@ -3,50 +3,50 @@ const router = express.Router();
 const uuid = require('uuid');
 
 router.use('/', function(req, res, next) {
-    var hashCode = uuid.v4();
-    var sql = "select b.change_Id, count(b.change_id) cnt from (select distinct user_code, change_id from scripts_web) b group by b.change_id order by cnt";
+    let hashCode = uuid.v4();
+    let sql = "select b.change_Id, count(b.change_id) cnt from (select distinct user_code, change_id from scripts_web) b group by b.change_id order by cnt";
 
-    var mysql = require('mysql');
-    var config = require('../db/db_info');
-    var pool = mysql.createPool(config);
+    let mysql = require('mysql');
+    let config = require('../db/db_info');
+    let pool = mysql.createPool(config);
 
     pool.getConnection(function(err, conn) {
         if (!err) {
             conn.query(sql, function(error, results, fields) {
                 if (error) throw error;
 
-                var sql = "select distinct `change_id` from script_polish;";
+                let sql = "select distinct `change_id` from script_polish;";
 
-                var mysql = require('mysql');
-                var config = require('../db/db_info');
-                var pool = mysql.createPool(config);
-                var result = new Array();
+                let mysql = require('mysql');
+                let config = require('../db/db_info');
+                let pool = mysql.createPool(config);
+                let result = new Array();
             
                 pool.getConnection(function(err, conn) {
                     if (!err) {
                         conn.query(sql, function(error, results2, fields) {
                             if (error) throw error;
                             
-                            var diffNum = results2.length - results.length;
+                            let diffNum = results2.length - results.length;
                             if (diffNum > 0) {
-                                var filesObjArray = new Array();
-                                for (var i = 0; i < results.length; i++) {
+                                let filesObjArray = new Array();
+                                for (let i = 0; i < results.length; i++) {
                                     filesObjArray.push(results[i].change_Id);
                                 }
-                                for (var i = 0; i < results2.length; i++){
+                                for (let i = 0; i < results2.length; i++){
                                     if (!(filesObjArray.includes(results2[i].change_id))) {
                                         result.push(results2[i].change_id);
                                     }
                                     if (result.length == 5)
                                         break;
                                 }
-                                var cnt = 0;
+                                let cnt = 0;
                                 while (result.length < 5) {
                                     result.push(results[cnt].change_Id);
                                     cnt++;
                                 }
                             } else {
-                                for (var i = 0; i < 5; i++) {
+                                for (let i = 0; i < 5; i++) {
                                     result.push(results[i].change_Id);
                                 }
                             }
@@ -56,16 +56,16 @@ router.use('/', function(req, res, next) {
                     conn.release();
                 });
 
-                var sql2 = "select `file_name` from change_file_name order by `change_id`;";
+                let sql2 = "select `file_name` from change_file_name order by `change_id`;";
 
                 pool.getConnection(function(err, conn) {
                     if (!err) {
                         conn.query(sql2, function(error, results3, fields) {
                             if (error) throw error;
 
-                            var fileNames = new Array();
+                            let fileNames = new Array();
                             fileNames.push("");
-                            for (var i = 0; i < results3.length; i++) {
+                            for (let i = 0; i < results3.length; i++) {
                                 fileNames.push(results3[i].file_name);
                             }
                             
@@ -89,7 +89,7 @@ router.use('/', function(req, res, next) {
                 }, 2000);
             })
         }
-        conn.release();
+        // conn.release();
     });
 })
 
