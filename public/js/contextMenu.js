@@ -1,4 +1,4 @@
-let selectResult = new Object();
+let leftSel = new Object();
 
 // Context Menu List 렌더링
 function renderContextMenuList( list ){
@@ -136,7 +136,7 @@ function handleClearContextMenu(event){
 }
 
 function getSelectResult() {
-  return selectResult;
+  return leftSel;
 }
 
 
@@ -183,5 +183,5 @@ function dragSelect() {
   result.startPos = startPos;
   result.len = result.text.length;
 
-  selectResult = result;
+  leftSel = result;
 }

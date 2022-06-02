@@ -105,8 +105,17 @@ function renderContextMenuList( list ){
 
 // Context Menu 제거
 function handleClearContextMenu(event){
-    const ctxMenu = document.getElementById('dochi_context_menu');
-    if( ctxMenu ){
-      ctxMenu.remove();
-    }
+  const ctxMenu = document.getElementById('dochi_context_menu');
+  if( ctxMenu ){
+    ctxMenu.remove();
   }
+}
+
+function createDeleteButton(delType) {
+  let newATag = document.createElement('a');
+  newATag.href = "javascript:void(0)";
+  newATag.text = "Delete";
+  newATag.className = "del_btn";
+  newATag.onclick = function () { deleteRow(this, delType); };
+  return newATag;
+}

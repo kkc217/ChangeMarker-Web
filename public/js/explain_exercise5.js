@@ -187,11 +187,7 @@ function GenMoveLeft() {
   selectResult = getSelectResult();
   newRow.id = storedSelectionRight.len + "/" + selectResult.len;
 
-  let newATag = document.createElement('a');
-  newATag.href = "javascript:void(0)";
-  newATag.text = "Delete";
-  newATag.className = "del_btn";
-  newATag.onclick = function() {deleteRow(this, 1);};
+  let newATag = createDeleteButton(0);
 
 
   let newCell1 = newRow.insertCell(0);

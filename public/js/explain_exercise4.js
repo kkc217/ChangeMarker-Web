@@ -42,11 +42,7 @@ function GenInsert() {
   let newRow = table.insertRow();
   newRow.id = "/" + selectResult.len + ":/" + selectResult.startPos;
 
-  let newATag = document.createElement('a');
-  newATag.href = "javascript:void(0)";
-  newATag.text = "Insert";
-  newATag.className = "del_btn";
-  newATag.onclick = function() {deleteRow(this, 0);};
+  let newATag = createDeleteButton(0);
 
 
   let newCell1 = newRow.insertCell(0);
