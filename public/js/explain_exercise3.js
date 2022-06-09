@@ -117,188 +117,183 @@ function handleCreateContextMenu_left(event){
   if( prevCtxMenu ){
     prevCtxMenu.remove();
   }
-  
-  let selected = document.getSelection();
-  // var selected = document.getSelection();
-  if(selected.toString().length > 0) {
-    highlightSelection(selected);
-  }
 
   // Body에 Context Menu를 추가.
   document.body.appendChild( ctxMenu );
 }
 
+
 let storedSelectStartPos = 0;
 let storedSelectLines = new Array();
+// function leftHighlightSelection() {
+//   let selectedSpans = document.getElementById("left").getElementsByClassName("selection");
+//   for (i in selectedSpans) {
+//     selectedSpans[i].style = "";
+//   }
 
-function highlightSelection(selected) {
-  // console.log(selected);
-  let startNum, endNum, selectionStartNumber, selectionEndNumber;
-  if (selected.anchorNode.parentElement.attributes.length == 2 && !(selected.anchorNode.parentElement.attributes[1].value.includes('#'))) {
-    startNum = selected.anchorNode.parentElement.attributes[1].value;
-  } else if (selected.anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(selected.anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
-    startNum = selected.anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
-  }
+//   let selected = document.getSelection();
+//   if(selected.toString().length > 0) {
+//     highlightSelection(selected);
+//   }
+// }
 
-  if (selected.focusNode.parentElement.attributes.length == 2 && !(selected.focusNode.parentElement.attributes[1].value.includes('#'))) {
-    endNum = selected.focusNode.parentElement.attributes[1].value;
-  } else if (selected.focusNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(selected.focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
-    endNum = selected.focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
-  }
+// function rightHighlightSelection() {
+//   let selectedSpans = document.getElementById("right").getElementsByClassName("selection");
+//   for (i in selectedSpans) {
+//     selectedSpans[i].style = "";
+//   }
 
-  startNum *= 1;
-  endNum *= 1;
+//   let selected = document.getSelection();
+//   if(selected.toString().length > 0) {
+//     highlightSelection(selected);
+//   }
+// }
 
-  if (startNum == 0) {
-    selectionStartNumber = endNum;
-    selectionEndNumber = startNum;
-  } else if (endNum == 0) {
-    selectionStartNumber = startNum;
-    selectionEndNumber = endNum;
-  } else {
-    selectionStartNumber = (startNum < endNum) ? startNum : endNum;
-    selectionEndNumber = (startNum > endNum) ? startNum : endNum;
-  }
+// let storedSelectStartPos = 0;
+// let storedSelectLines = new Array();
 
-  // for (let i = 0; i < storedSelectLines.length; i++) {
-  //   let tbody = document.getElementById('left').children[0].children[0].children[0].children[0];
-  //   tbody.children[storedSelectStartPos + i].children[1].innerHTML = storedSelectLines[i];
-  // }
+// function highlightSelection(selected) {
+//   let startNum, endNum, selectionStartNumber, selectionEndNumber;
+//   if (selected.anchorNode.parentElement.attributes.length == 2 && !(selected.anchorNode.parentElement.attributes[1].value.includes('#'))) {
+//     startNum = selected.anchorNode.parentElement.attributes[1].value;
+//   } else if (selected.anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(selected.anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
+//     startNum = selected.anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
+//   }
+
+//   if (selected.focusNode.parentElement.attributes.length == 2 && !(selected.focusNode.parentElement.attributes[1].value.includes('#'))) {
+//     endNum = selected.focusNode.parentElement.attributes[1].value;
+//   } else if (selected.focusNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(selected.focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
+//     endNum = selected.focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
+//   }
+
+//   startNum *= 1;
+//   endNum *= 1;
+
+//   if (startNum == 0) {
+//     selectionStartNumber = endNum;
+//     selectionEndNumber = startNum;
+//   } else if (endNum == 0) {
+//     selectionStartNumber = startNum;
+//     selectionEndNumber = endNum;
+//   } else {
+//     selectionStartNumber = (startNum < endNum) ? startNum : endNum;
+//     selectionEndNumber = (startNum > endNum) ? startNum : endNum;
+//   }
   
-  storedSelectLines = [];
-  storedSelectStartPos = selectionStartNumber - 1;
+//   storedSelectLines = [];
+//   storedSelectStartPos = selectionStartNumber - 1;
 
 
-  selected = selected.getRangeAt(0);
-  // console.log(selected);
-  let old = selected.cloneContents();
+//   selected = selected.getRangeAt(0);
+//   let old = selected.cloneContents();
 
-  if (selectionStartNumber != selectionEndNumber) {
-    let safeRanges = getSafeRanges(selected);
-    for (let i = 0; i < safeRanges.length; i++) {
-      highlightRange(safeRanges[i]);
-    }
-    // let tbody = document.getElementById('left').children[0].children[0].children[0].children[0];
-    // let oldChildren = old.children;
-    
-    // storedSelectLines.push(tbody.children[selectionStartNumber - 1].children[1].innerHTML);
-
-    // let frontSpan = createHilightedSpan(oldChildren[0].cells[0].innerHTML);
-    // let frontInnerHTML = tbody.children[selectionStartNumber - 1].children[1].innerHTML;
-    // let frontSelectStart = frontInnerHTML.lastIndexOf(oldChildren[0].cells[0].innerHTML);
-    // frontInnerHTML = frontInnerHTML.slice(0, frontSelectStart) + frontSpan.innerHTML + frontInnerHTML.slice(frontSelectStart + oldChildren[0].cells[0].innerHTML.length);
-    // tbody.children[selectionStartNumber - 1].children[1].innerHTML = frontInnerHTML;
-    
-    // for (let i = 1; i < oldChildren.length - 1; i++) {
-    //   storedSelectLines.push(tbody.children[selectionStartNumber + i - 1].children[1].innerHTML);
-    //   let span = createHilightedSpan(oldChildren[i].children[1].innerHTML);
-    //   tbody.children[selectionStartNumber + i - 1].children[1].innerHTML = span.innerHTML;
-    // }
-    
-    // storedSelectLines.push(tbody.children[selectionEndNumber - 1].children[1].innerHTML);
+//   if (selectionStartNumber != selectionEndNumber) {
+//     let safeRanges = getSafeRanges(selected);
+//     for (let i = 0; i < safeRanges.length; i++) {
+//       highlightRange(safeRanges[i]);
+//     }
+//     let tbody = document.getElementById('left').children[0].children[0].children[0].children[0];
+//     let oldChildren = old.children;
   
-    // let backSpan = createHilightedSpan(oldChildren[oldChildren.length - 1].cells[1].innerHTML);
-    // let backInnerHTML = tbody.children[selectionEndNumber - 1].children[1].innerHTML;
-    // let backSelectStart = backInnerHTML.indexOf(oldChildren[oldChildren.length - 1].cells[1].innerHTML);
-    // backInnerHTML = backInnerHTML.slice(0, backSelectStart) + backSpan.innerHTML + backInnerHTML.slice(backSelectStart + oldChildren[oldChildren.length - 1].cells[1].innerHTML.length);
-    // tbody.children[selectionEndNumber - 1].children[1].innerHTML = backInnerHTML;
-    // console.log(storedSelectLines);
-  }
-  else {
-    let safeRanges = getSafeRanges(selected);
-    for (let i = 0; i < safeRanges.length; i++) {
-      highlightRange(safeRanges[i]);
-    }
-  }
+//     for (let i = 1; i < oldChildren.length - 1; i++) {
+//       storedSelectLines.push(tbody.children[selectionStartNumber + i - 1].children[1].innerHTML);
+//       let span = createHilightedSpan(oldChildren[i].children[1].innerHTML);
+//       tbody.children[selectionStartNumber + i - 1].children[1].innerHTML = span.innerHTML;
+//     }
+    
+//     storedSelectLines.push(tbody.children[selectionEndNumber - 1].children[1].innerHTML);
+//   }
+//   else {
+//     let safeRanges = getSafeRanges(selected);
+//     for (let i = 0; i < safeRanges.length; i++) {
+//       highlightRange(safeRanges[i]);
+//     }
+//   }
+// }
 
-}
-
-function highlightRange(range) {
-  let newNode = document.createElement("div");
-  newNode.setAttribute(
-     "style",
-     "background-color: yellow; display: inline;"
-  );
-  range.surroundContents(newNode);
-}
-
-function getSafeRanges(dangerous) {
-  let a = dangerous.commonAncestorContainer;
-  // Starts -- Work inward from the start, selecting the largest safe range
-  let s = new Array(0), rs = new Array(0);
-  if (dangerous.startContainer != a)
-    for(let i = dangerous.startContainer; i != a; i = i.parentNode) {
-      s.push(i)
-    }
-  ;
-  if (0 < s.length) for(let i = 0; i < s.length; i++) {
-    let xs = document.createRange();
-    if (i) {
-        xs.setStartAfter(s[i-1]);
-        xs.setEndAfter(s[i].lastChild);
-    }
-    else {
-        xs.setStart(s[i], dangerous.startOffset);
-        xs.setEndAfter(
-            (s[i].nodeType == Node.TEXT_NODE)
-            ? s[i] : s[i].lastChild
-        );
-    }
-    rs.push(xs);
-  }
-
-  // Ends -- basically the same code reversed
-  let e = new Array(0), re = new Array(0);
-  if (dangerous.endContainer != a)
-    for(let i = dangerous.endContainer; i != a; i = i.parentNode)
-        e.push(i)
-  ;
-  if (0 < e.length) for(let i = 0; i < e.length; i++) {
-    let xe = document.createRange();
-    if (i) {
-        xe.setStartBefore(e[i].firstChild);
-        xe.setEndBefore(e[i-1]);
-    }
-    else {
-        xe.setStartBefore(
-            (e[i].nodeType == Node.TEXT_NODE)
-            ? e[i] : e[i].firstChild
-        );
-        xe.setEnd(e[i], dangerous.endOffset);
-    }
-    re.unshift(xe);
-  }
-
-  // Middle -- the uncaptured middle
+// function getSafeRanges(dangerous) {
+//   let a = dangerous.commonAncestorContainer;
+//   // Starts -- Work inward from the start, selecting the largest safe range
+//   let s = new Array(0), rs = new Array(0);
+//   if (dangerous.startContainer != a)
+//     for(let i = dangerous.startContainer; i != a; i = i.parentNode) {
+//       s.push(i);
+//     }
   
-  let xm = document.createRange();
-  if ((0 < s.length) && (0 < e.length)) {
-    xm.setStartAfter(s[s.length - 1]);
-    xm.setEndBefore(e[e.length - 1]);
-  }
-  else {
-    return [dangerous];
-  }
+//   if (0 < s.length) for(let i = 0; i < s.length; i++) {
+//     let xs = document.createRange();
+//     if (i) {
+//         xs.setStartAfter(s[i-1]);
+//         xs.setEndAfter(s[i].lastChild);
+//     }
+//     else {
+//         xs.setStart(s[i], dangerous.startOffset);
+//         xs.setEndAfter(
+//             (s[i].nodeType == Node.TEXT_NODE)
+//             ? s[i] : s[i].lastChild
+//         );
+//         console.log(s[i].nodeType == Node.TEXT_NODE);
+//         console.log((s[i].nodeType == Node.TEXT_NODE)
+//         ? s[i] : s[i].lastChild);
+//         console.log(typeof(s[i]));
+//     }
+//     if (xs.commonAncestorContainer.innerHTML.indexOf("data-line-number") < 0) {
+//       rs.push(xs);
+//     }
+//   }
 
-  // Concat
-  rs.push(xm);
-  response = rs.concat(re);    
+//   // Ends -- basically the same code reversed
+//   let e = new Array(0), re = new Array(0);
+//   if (dangerous.endContainer != a)
+//     for(let i = dangerous.endContainer; i != a; i = i.parentNode)
+//         e.push(i)
+//   ;
+//   if (0 < e.length) for(let i = 0; i < e.length; i++) {
+//     let xe = document.createRange();
+//     if (i) {
+//         xe.setStartBefore(e[i].firstChild);
+//         xe.setEndBefore(e[i-1]);
+//     }
+//     else {
+//         xe.setStartBefore(
+//             (e[i].nodeType == Node.TEXT_NODE)
+//             ? e[i] : e[i].firstChild
+//         );
+//         xe.setEnd(e[i], dangerous.endOffset);
+//     }
+//     if (xe.commonAncestorContainer.innerHTML.indexOf("data-line-number") < 0) {
+//       re.unshift(xe);
+//     }
+//   }
+  
+//   if ((0 >= s.length) || (0 >= e.length)) {
+//     return [dangerous];
+//   }
 
-  // Send to Console
-  return response;
-}
+//   response = rs.concat(re);
+  
+//   return response;
+// }
 
+// function createHilightedSpan(text) {
+//   let span = document.createElement('span');
+//   span.className = "selection";
+//   span.style.backgroundColor = '#bbd6fb';
+//   span.innerHTML = text;
+//   let div = document.createElement('div');
+//   div.appendChild(span);
+//   return div;
+// }
 
-function createHilightedSpan(text) {
-  // let span = `<span id="selection" style="background-color:'#0FF0F0`;
-  let span = document.createElement('span');
-  span.id = "selection";
-  span.style.backgroundColor = '#0FF0F0';
-  span.innerHTML = text;
-  let div = document.createElement('div');
-  div.appendChild(span);
-  return div;
-}
+// function highlightRange(range) {
+//   let newNode = document.createElement("span");
+//   newNode.setAttribute(
+//      "style",
+//      "background-color: #bbd6fb;"
+//   );
+//   newNode.className = "selection";
+//   range.surroundContents(newNode);
+// }
 
 
 
@@ -422,6 +417,8 @@ function move_inner() {
 }
 
 function init() {
+    document.getElementById('left').onmouseup = leftHighlightSelection;
+    document.getElementById('right').onmouseup = rightHighlightSelection;
     document.getElementById('left').addEventListener('contextmenu', handleCreateContextMenu_left, false);
     document.getElementById('right').addEventListener('contextmenu', handleCreateContextMenu_right, false);
     document.addEventListener('click', handleClearContextMenu, false);
