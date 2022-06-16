@@ -41,25 +41,25 @@ async function tutorialCheckAjax(lhs, rhs) {
 }
 
 const TYPE_NAMES = ["Delete", "Insert", "Move", "Update"];
-async function GenController(type, typeCheck, check=0) {
-    if (type == typeCheck) {
-        if (type == 0) {
-            GenDelete();
+async function GenController(type, typeCheck) {
+    if (type.includes(typeCheck)) {
+        if (typeCheck == 0) {
+          GenDelete();
         }
-        else if (type == 1) {
-            GenInsert();
+        else if (typeCheck == 1) {
+          GenInsert();
         }
-        else if (type == 2) {
-            if (check == 1)
-                GenMoveLeft();
-            else
-                GenMoveRight();
+        else if (typeCheck == 2) {
+          GenMoveLeft();
+        }
+        else if (typeCheck == 3) {
+          GenMoveRight();
+        }
+        else if (typeCheck == 4) {
+          GenUpdateLeft();
         }
         else {
-            if (check == 1)
-                GenUpdateLeft();
-            else
-                GenUpdateRight();
+          GenUpdateRight();
         }
     }
     else {
@@ -149,8 +149,102 @@ function rightHighlightSelection() {
   }
 }
 
-// let storedSelectStartPos = 0;
-// let storedSelectLines = new Array();
+
+function storeSelectionLeft() {
+  let result = new Object();
+  let selectionText = "";
+  let startNum = "";
+  let endNum = "";
+  let selectionNumber = "";
+  let startPos = 0;
+
+  if (document.getSelection) {
+    selectionText = document.getSelection();
+    startPos = selectionText.getRangeAt(0).startOffset;
+  } else if (document.selection) {
+    selectionText = document.selection.createRange().text;
+  }
+
+  if (document.getSelection().anchorNode.parentElement.attributes.length == 2 && !(document.getSelection().anchorNode.parentElement.attributes[1].value.includes('#'))) {
+    startNum = document.getSelection().anchorNode.parentElement.attributes[1].value;
+  } else if (document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
+    startNum = document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
+  }
+
+  if (document.getSelection().focusNode.parentElement.attributes.length == 2 && !(document.getSelection().focusNode.parentElement.attributes[1].value.includes('#'))) {
+    endNum = document.getSelection().focusNode.parentElement.attributes[1].value;
+  } else if (document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
+    endNum = document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
+  }
+
+  startNum *= 1;
+  endNum *= 1;
+
+  if (startNum == 0) {
+    selectionNumber = endNum;
+  } else if (endNum == 0) {
+    selectionNumber = startNum;
+  } else {
+    selectionNumber = (startNum < endNum) ? startNum : endNum;
+  }
+
+  result.text = selectionText.toString();
+  result.lineNum = selectionNumber;
+  result.startPos = startPos;
+  result.len = result.text.length;
+
+  storedSelectionLeft = result;
+
+  leftHighlightSelection();
+}
+
+function storeSelectionRight() {
+  let result = new Object();
+  let selectionText = "";
+  let startNum = "";
+  let endNum = "";
+  let selectionNumber = "";
+  let startPos = 0;
+
+  if (document.getSelection) {
+    selectionText = document.getSelection();
+    startPos = selectionText.getRangeAt(0).startOffset;
+  } else if (document.selection) {
+    selectionText = document.selection.createRange().text;
+  }
+
+  if (document.getSelection().anchorNode.parentElement.attributes.length == 2 && !(document.getSelection().anchorNode.parentElement.attributes[1].value.includes('#'))) {
+    startNum = document.getSelection().anchorNode.parentElement.attributes[1].value;
+  } else if (document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
+    startNum = document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
+  }
+
+  if (document.getSelection().focusNode.parentElement.attributes.length == 2 && !(document.getSelection().focusNode.parentElement.attributes[1].value.includes('#'))) {
+    endNum = document.getSelection().focusNode.parentElement.attributes[1].value;
+  } else if (document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
+    endNum = document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
+  }
+
+  startNum *= 1;
+  endNum *= 1;
+
+  if (startNum == 0) {
+    selectionNumber = endNum;
+  } else if (endNum == 0) {
+    selectionNumber = startNum;
+  } else {
+    selectionNumber = (startNum < endNum) ? startNum : endNum;
+  }
+
+  result.text = selectionText.toString();
+  result.lineNum = selectionNumber;
+  result.startPos = startPos;
+  result.len = result.text.length;
+
+  storedSelectionRight = result;
+
+  rightHighlightSelection();
+}
 
 function highlightSelection(selected) {
   let startNum, endNum, selectionStartNumber, selectionEndNumber;
@@ -289,4 +383,162 @@ function highlightRange(range) {
   );
   newNode.className = "selection";
   range.surroundContents(newNode);
+}
+
+function move_inner(leftX, leftY, rightX, rightY) {
+  let left = document.getElementById("left");
+  let right = document.getElementById("right")
+
+  left.scrollTo(leftX, leftY);
+  right.scrollTo(rightX, rightY);
+}
+
+function getSelectResult() {
+  return selectResult;
+}
+
+function dragSelect() {
+  let result = new Object();
+  let selectionText = "";
+  let startNum = "";
+  let endNum = "";
+  let selectionNumber = "";
+  let startPos = 0;
+
+  if (document.getSelection) {
+    selectionText = document.getSelection();
+    try {
+      startPos = selectionText.getRangeAt(0).startOffset;
+    }
+    catch {
+      alert('Pleas select texts again.');
+      return;
+    }
+  } else if (document.selection) {
+    selectionText = document.selection.createRange().text;
+  }
+  
+  if (document.getSelection().anchorNode.parentElement.attributes.length == 2 && !(document.getSelection().anchorNode.parentElement.attributes[1].value.includes('#'))) {
+    startNum = document.getSelection().anchorNode.parentElement.attributes[1].value;
+  } else if (document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
+    startNum = document.getSelection().anchorNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
+  }
+
+  if (document.getSelection().focusNode.parentElement.attributes.length == 2 && !(document.getSelection().focusNode.parentElement.attributes[1].value.includes('#'))) {
+    endNum = document.getSelection().focusNode.parentElement.attributes[1].value;
+  } else if (document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes.length == 2 && !(document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value.includes('#'))) {
+    endNum = document.getSelection().focusNode.parentElement.firstChild.parentNode.offsetParent.attributes[1].value;
+  }
+
+  startNum *= 1;
+  endNum *= 1;
+
+  if (startNum == 0) {
+    selectionNumber = endNum;
+  } else if (endNum == 0) {
+    selectionNumber = startNum;
+  } else {
+    selectionNumber = (startNum < endNum) ? startNum : endNum;
+  }
+
+  result.text = selectionText.toString();
+  result.lineNum = selectionNumber;
+  result.startPos = startPos;
+  result.len = result.text.length;
+
+  selectResult = result;
+}
+
+function handleCreateContextMenu_left(event){
+  event.preventDefault();
+  
+  const ctxMenuId = 'dochi_context_menu';
+  const ctxMenu = document.createElement('div');
+  
+  ctxMenu.id = ctxMenuId;
+  ctxMenu.className = 'custom-context-menu';
+  
+  ctxMenu.style.top = event.pageY+'px';
+  ctxMenu.style.left = event.pageX+'px';
+  
+  dragSelect();
+
+  ctxMenu.appendChild(renderContextMenuList([
+    {
+      label: "Generate Delete",
+      onClick: function(){
+        GenController(genControllerType, 0);
+      }
+    },
+    {
+      label: "Generate Move",
+      onClick: function(event){
+        GenController(genControllerType, 2);
+      }
+    },
+    {
+      label: "Generate Update",
+      onClick: function(event){
+        GenController(genControllerType, 4);
+      }
+    }
+  ]));
+  
+  const prevCtxMenu = document.getElementById( ctxMenuId );
+  if( prevCtxMenu ){
+    prevCtxMenu.remove();
+  }
+
+  document.body.appendChild( ctxMenu );
+}
+
+function handleCreateContextMenu_right(event){
+  event.preventDefault();
+  
+  const ctxMenuId = 'dochi_context_menu';
+  const ctxMenu = document.createElement('div');
+  
+  ctxMenu.id = ctxMenuId;
+  ctxMenu.className = 'custom-context-menu';
+  
+  ctxMenu.style.top = event.pageY+'px';
+  ctxMenu.style.left = event.pageX+'px';
+  
+  dragSelect();
+
+  ctxMenu.appendChild(renderContextMenuList([
+      {
+      label: "Generate Insert",
+        onClick: function(event){
+          GenController(genControllerType, 1);
+        }
+      },
+      {
+      label: "Generate Move",
+        onClick: function(event){
+          GenController(genControllerType, 3);
+        }
+      },
+      {
+      label: "Generate Update",
+        onClick: function(event){
+          GenController(genControllerType, 5);
+        }
+      }
+  ]));
+  
+  const prevCtxMenu = document.getElementById( ctxMenuId );
+  if( prevCtxMenu ){
+    prevCtxMenu.remove();
+  }
+  
+  document.body.appendChild( ctxMenu );
+}
+
+function init() {
+  document.getElementById('left').onmouseup = storeSelectionLeft;
+  document.getElementById('right').onmouseup = storeSelectionRight;
+  document.getElementById('left').addEventListener('contextmenu', handleCreateContextMenu_left, false);
+  document.getElementById('right').addEventListener('contextmenu', handleCreateContextMenu_right, false);
+  document.addEventListener('click', handleClearContextMenu, false);
 }
